@@ -1,0 +1,36 @@
+cd C:\Program Files\MongoDB\Server\4.0\bin
+mongod -dbpath c:/data/db
+
+open a Command Interpreter with Administrative privileges and run:
+"C:\Program Files\MongoDB\Server\4.0\bin\mongod.exe" --dbpath="c:\data\db"
+
+ open another Command Interpreter with Administrative privileges and run:
+"C:\Program Files\MongoDB\Server\4.0\bin\mongo.exe"
+
+
+C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn>bcp "exec AdventureWorks.dbo.getpersonjson " queryout "C:\data\person1.json" -T -c -S DESKTOP-UN5CCN8\TEST1SQL
+bcp "exec AdventureWorks.dbo.getpersonjson " queryout "C:\data\person1.json" -T -c
+bcp "exec AdventureWorks.dbo.GetProductDescriptionHistoryJson " queryout "C:\data\productDescription.json" -T -c -S DESKTOP-UN5CCN8\TEST1SQL
+bcp "exec AdventureWorks.dbo.GetProductionProductJson " queryout "C:\data\productionProduct.json" -T -c -S DESKTOP-UN5CCN8\TEST1SQL
+bcp "exec AdventureWorks.dbo.GetProductSubcategoryJson " queryout "C:\data\productSubcategory.json" -T -c -S DESKTOP-UN5CCN8\TEST1SQL
+bcp "exec AdventureWorks.dbo.GetProductCategoryJson " queryout "C:\data\productCategory.json" -T -c -S DESKTOP-UN5CCN8\TEST1SQL
+
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongoimport --db adventureworks --collection ProductDescription --file "C:\data\productDescription.json" --jsonArray
+mongoimport --db adventureworks --collection ProductionProduct --file "C:\data\productionProduct.json" --jsonArray
+mongoimport --db adventureworks --collection ProductSubcategory --file "C:\data\productSubcategory.json" --jsonArray
+mongoimport --db adventureworks --collection ProductCategory --file "C:\data\productCategory.json" --jsonArray
+
+
+db.ProductSubcategory.aggregate([
+{$lookup:
+{from:"ProductCategory",
+localField:"ProductCategoryID",
+foreignField:"ProductCategoryID",
+as:"Category"}
+}
+])
+.pretty()
+
+
+db.Person.insertOne({ "BusinessEntityID" : 30000, "Title" : "Mrs", "FirstName" : "Olga", "LastName" : "Olga", "Phone": [{"type": "Cell","number": "212-454-0101" }] })
